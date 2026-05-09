@@ -3234,6 +3234,14 @@ const DATA_PRIVACY = Object.freeze({
         'workers.dev',
         'fonts.googleapis.com',
         'fonts.gstatic.com',
+        'googleapis.com',
+        'firebase.com',
+        'firebaseapp.com',
+        'firebaseio.com',
+        'gstatic.com',
+        'google.com',
+        'identitytoolkit.googleapis.com',
+        'securetoken.googleapis.com',
       ];
       const isAllowed = allowed.some(d => urlStr.includes(d));
       if(!isAllowed && urlStr.startsWith('http')){
