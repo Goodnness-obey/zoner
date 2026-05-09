@@ -598,11 +598,14 @@ h3{font-size:clamp(17px,4vw,22px);font-weight:900;}
 /* ── PC 최적화 (1024px 이상) ── */
 @media(min-width:1024px){
   .ham{display:none!important;}
+  .sb{transform:translateX(0)!important;}
+  .ovl{display:none!important;}
+  .layout{margin-left:var(--sw);}
+  .hdr{left:var(--sw);right:0;width:auto;}
   .main{padding:28px 36px;max-width:900px;}
   .gg{grid-template-columns:repeat(6,1fr);}
   .sg{grid-template-columns:repeat(4,1fr);}
   #arena{min-height:360px;}
-  /* 온보딩 PC */
   #onboarding > div{max-width:600px;padding:64px 48px 80px;}
 }
 @media(max-width:767px){
