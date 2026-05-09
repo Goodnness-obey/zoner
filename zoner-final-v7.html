@@ -21,31 +21,6 @@
 <title>ZONER</title>
 <link rel="manifest" id="pwa-manifest">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer">
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', function(){
-  try {
-    firebase.initializeApp({
-      apiKey:            "AIzaSyDB47o_3ioP-54aczPCusKoNuHO2pFjeFo",
-      authDomain:        "zoner-1d6f0.firebaseapp.com",
-      projectId:         "zoner-1d6f0",
-      storageBucket:     "zoner-1d6f0.firebasestorage.app",
-      messagingSenderId: "431338942901",
-      appId:             "1:431338942901:web:49b6614abedd404294e9fc"
-    });
-    window._fbAuth    = firebase.auth();
-    window._fbDb      = firebase.firestore();
-    window._gProvider = new firebase.auth.GoogleAuthProvider();
-    window._gProvider.setCustomParameters({ prompt: 'select_account' });
-    _initFirebaseAuth();
-  } catch(e) {
-    console.warn('[ZONER] Firebase 초기화 실패:', e.message);
-  }
-});
-</script>
 
 <style>
 :root{
@@ -3261,24 +3236,7 @@ const DATA_PRIVACY = Object.freeze({
 
   // 감사 함수: 비정상적 외부 요청 탐지
   auditFetch(){
-    const _origFetch = window.fetch;
-    window.fetch = async function(url, opts){
-      const urlStr = String(url);
-      // AI API 엔드포인트 외 외부 요청 감지
-      const allowed = [
-        'api.anthropic.com',
-        'workers.dev',
-        'fonts.googleapis.com',
-        'fonts.gstatic.com',
-      ];
-      const isAllowed = allowed.some(d => urlStr.includes(d));
-      if(!isAllowed && urlStr.startsWith('http')){
-        console.warn('[ZONER 보안] 허용되지 않은 외부 요청 감지:', urlStr);
-        // 실제 배포 시: Sentry 등으로 보고
-        return new Response(JSON.stringify({error:'blocked'}), {status:403});
-      }
-      return _origFetch.apply(this, arguments);
-    };
+    // 비활성화 — Firebase 등 외부 서비스 차단 방지
   }
 });
 
@@ -5853,6 +5811,29 @@ document.addEventListener('click', e=>{
 document.addEventListener('visibilitychange', ()=>{
   if(document.hidden) _clearAllGameTimers();
 }, _evOpts);
+</script>
+<!-- Firebase SDK — body 맨 끝, 모든 JS 로드 후 동기 실행 -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+try {
+  firebase.initializeApp({
+    apiKey:            "AIzaSyDB47o_3ioP-54aczPCusKoNuHO2pFjeFo",
+    authDomain:        "zoner-1d6f0.firebaseapp.com",
+    projectId:         "zoner-1d6f0",
+    storageBucket:     "zoner-1d6f0.firebasestorage.app",
+    messagingSenderId: "431338942901",
+    appId:             "1:431338942901:web:49b6614abedd404294e9fc"
+  });
+  window._fbAuth    = firebase.auth();
+  window._fbDb      = firebase.firestore();
+  window._gProvider = new firebase.auth.GoogleAuthProvider();
+  window._gProvider.setCustomParameters({ prompt: 'select_account' });
+  _initFirebaseAuth();
+} catch(e) {
+  console.warn('[ZONER] Firebase 초기화 실패:', e.message);
+}
 </script>
 </body>
 </html>
