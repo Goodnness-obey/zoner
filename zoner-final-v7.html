@@ -1782,7 +1782,7 @@ const _FEATURES = Object.freeze({
 });
 
 // 무료 플랜 일일 AI 호출 한도
-const _FREE_AI_LIMIT = 3;
+const _FREE_AI_LIMIT = 999;
 
 // ── 내부 상태 (외부 접근 차단) ──
 const _license = (function(){
@@ -1829,7 +1829,7 @@ const _license = (function(){
     // AI 호출 가능 여부 (무료 한도 체크)
     canCallAI(){
       if(_plan >= _PLANS.PLUS) return true; // 유료는 무제한
-      return _aiCount < _FREE_AI_LIMIT;
+      return true; // 개발 중 무제한
     },
 
     // AI 호출 카운트 증가
@@ -1899,20 +1899,12 @@ const _license = (function(){
 // ── 유료 기능 게이트 함수 ──
 // 사용법: if(!gate('AI_FEEDBACK_UNLIMITED')) return;
 function gate(feature){
-  if(_license.can(feature)) return true;
-  showUpgradePrompt(feature);
-  return false;
+  return true; // 개발 중 전체 해제
 }
 
 // AI 호출 게이트
 function gateAI(){
-  if(_license.canCallAI()) return true;
-  const rem = _license.aiRemaining();
-  if(rem === 0){
-    showAILimitPrompt();
-    return false;
-  }
-  return true;
+  return true; // 개발 중 전체 해제
 }
 
 // ── 업그레이드 유도 UI ──
@@ -2544,7 +2536,7 @@ function quickGame(name){
 // ══ AI FEEDBACK (훈련 후) ══
 async function showAIFeedback(gameName,correct,total,diffLv){
   // 무제한 피드백은 ZONER+ 전용, 무료는 3회 제한 공유
-  if(!_license.canCallAI()){showAILimitPrompt();return;}
+  // AI 무제한 (개발 중)
   _license.tickAI();
   const wrap=document.getElementById('ai-feedback-wrap');
   wrap.innerHTML=`<div style="background:linear-gradient(135deg,#0f0a1e,#0a1020);border:1px solid var(--accent);border-radius:16px;padding:20px;margin-top:16px;">
