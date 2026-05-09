@@ -421,8 +421,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .ob-choice.selected{border-color:var(--accent);background:#0f0a1e;color:white;}
 /* 토글 스위치 켜짐 */
 input:checked + #notif-daily-ui{background:var(--accent);}
-input:checked + span::after{content:'';position:absolute;left:22px;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:.3s;}
-span::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:.3s;}
+input:checked + .toggle-knob::after{content:'';position:absolute;left:22px;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:.3s;}
+.toggle-knob::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:.3s;}
 /* ── 앱 진입 애니메이션 — 어둠에서 서서히 드러남 ── */
 @keyframes zoner-reveal{
   0%  { opacity:0; transform:scale(1.015); }
