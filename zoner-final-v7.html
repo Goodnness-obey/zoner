@@ -2339,6 +2339,7 @@ function switchTab(t){
   const nb=document.getElementById('nav-'+t); if(nb) nb.classList.add('active');
   const bt=document.getElementById('bt-'+t); if(bt) bt.classList.add('active');
   if(t==='stats') updateUI();
+  if(t==='settings' && typeof _FB !== 'undefined') _FB._refreshUI();
 }
 
 // ══ 보안 설정 ══
@@ -4307,7 +4308,8 @@ const _FB = (() => {
 
     // save() 호출 시 자동 업로드 훅 (throttle 30초)
     get user(){ return _user; },
-    get lastSync(){ return _lastSync; }
+    get lastSync(){ return _lastSync; },
+    _refreshUI(){ _updateAuthUI(_user); }
   };
 })();
 
