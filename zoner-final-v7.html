@@ -4203,6 +4203,13 @@ const _FB = (() => {
     }
   }
 
+  // redirect 로그인 후 결과 처리
+  _fbAuth.getRedirectResult().catch(e => {
+    if(e.code !== 'auth/no-redirect-operation-pending'){
+      console.warn('[ZONER] redirect result error:', e.code);
+    }
+  });
+
   // onAuthStateChanged — 앱 시작 시 자동 감지
   _fbAuth.onAuthStateChanged(async user => {
     _user = user;
@@ -4251,16 +4258,14 @@ const _FB = (() => {
   });
 
   return {
-    // Google 로그인
+    // Google 로그인 (redirect 방식 — GitHub Pages 환경 호환)
     async signInGoogle(){
       try {
-        flash('Google 로그인 중...');
-        await _fbAuth.signInWithPopup(_gProvider);
+        flash('Google 로그인 페이지로 이동합니다...');
+        await _fbAuth.signInWithRedirect(_gProvider);
       } catch(e){
-        if(e.code !== 'auth/popup-closed-by-user'){
-          flash('로그인 실패: ' + (e.message || '알 수 없는 오류'));
-          console.warn('[ZONER] signIn error:', e.code);
-        }
+        flash('로그인 실패: ' + (e.message || '알 수 없는 오류'));
+        console.warn('[ZONER] signIn error:', e.code);
       }
     },
 
