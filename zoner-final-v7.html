@@ -2427,14 +2427,17 @@ async function sendCoach(){
 
   try{
     const data=await callAI(sys,coachHistory);
-    const text=data.content?.map(i=>i.text||'').join('')||'잠깐 연결이 끊겼어요. 다시 말씀해 주세요!';
+    console.log('[ZONER] AI 응답:', JSON.stringify(data));
+    const text=(data.content&&Array.isArray(data.content))?data.content.map(i=>i.text||'').join(''):
+      (data.error?'오류: '+data.error:'잠깐 연결이 끊겼어요. 다시 말씀해 주세요!');
     removeTyping(typingId);
     addChatMsg(text,'ai');
     coachHistory.push({role:'assistant',content:text});
     if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);
   }catch(e){
+    console.error('[ZONER] AI 오류:', e.message);
     removeTyping(typingId);
-    addChatMsg('잠깐 연결이 끊겼어요. 다시 말씀해 주세요!','ai');
+    addChatMsg('잠깐 연결이 끊겼어요. 다시 말씀해 주세요! ('+e.message+')','ai');
   } finally {
     _aiSending=false;
     const sendBtn=document.getElementById('coach-send-btn');
