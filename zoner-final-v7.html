@@ -1976,7 +1976,7 @@ function showUpgradePrompt(feature){
   if(navigator.vibrate) navigator.vibrate(30);
 }
 
-function submitWaitlist(){
+async function submitWaitlist(){
   const inp = document.getElementById('waitlist-email');
   if(!inp) return;
   const email = inp.value.trim();
@@ -1985,7 +1985,17 @@ function submitWaitlist(){
     inp.placeholder='올바른 이메일을 입력해 주세요';
     return;
   }
-  // localStorage에 저장 (서버 미구축 시 임시)
+  const btn = document.querySelector('#upgrade-modal .btn');
+  if(btn){ btn.textContent='신청 중...'; btn.disabled=true; }
+  try{
+    // Google Forms 제출 (no-cors — 응답 확인 불가하지만 실제 전송됨)
+    await fetch('https://docs.google.com/forms/d/e/1FAIpQLSftEGV6VScOxS7VefdgKF6KZTpkpVRX18muOiT_xgr006sO4Q/formResponse', {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'entry.709124011=' + encodeURIComponent(email)
+    });
+  }catch(e){}
   try{
     const list = JSON.parse(localStorage.getItem('zn_waitlist')||'[]');
     if(!list.includes(email)) list.push(email);
